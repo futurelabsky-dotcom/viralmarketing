@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useSession } from '@/lib/auth-context'
+import { useAuth } from "../../../lib/auth-context"
 import { TrendingUp, Users, BookOpen, Calendar, ArrowRight, MessageSquare, Heart, Eye, Hash, Flame } from 'lucide-react'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
@@ -15,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { formatDate, getInitials } from '@/lib/utils'
 
 export default function HomePage() {
-  const { data: session } = useSession()
+  const { user } = useAuth()
   const [featuredPosts, setFeaturedPosts] = useState<any[]>([])
   const [popularPosts, setPopularPosts] = useState<any[]>([])
   const [recentPosts, setRecentPosts] = useState<any[]>([])
