@@ -46,16 +46,32 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // Mock 회원가입 처리
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      setSuccess('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.')
-      
-      setTimeout(() => {
-        router.push('/auth/signin?message=회원가입이 완료되었습니다')
-      }, 1500)
+      // 실제 회원가입 API 호출
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        setSuccess('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.')
+        setTimeout(() => {
+          router.push('/auth/signin?message=회원가입이 완료되었습니다')
+        }, 1500)
+      } else {
+        setError(data.error || '회원가입에 실패했습니다.')
+      }
       
     } catch (error) {
+      console.error('Signup error:', error)
       setError('회원가입 중 오류가 발생했습니다.')
     } finally {
       setLoading(false)

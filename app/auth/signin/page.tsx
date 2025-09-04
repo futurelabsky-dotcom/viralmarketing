@@ -38,25 +38,33 @@ export default function SignInPage() {
     setLoading(true)
 
     try {
-      // Mock 로그인 처리 - 데모 계정
-      if (formData.email === 'demo@example.com' && formData.password === 'demo123') {
-        // 성공적으로 로그인
-        router.push('/')
-        return
-      }
+      // 실제 로그인 API 호출
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      })
 
-      // 실제 로그인 API 호출 (현재는 Mock)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      if (formData.email && formData.password) {
-        // 임시로 모든 계정을 유효한 것으로 처리
+      const data = await response.json()
+
+      if (response.ok && data.success) {
+        // 로그인 성공
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
         router.push('/')
       } else {
-        throw new Error('이메일과 비밀번호를 확인해주세요')
+        // 로그인 실패
+        setError(data.error || '로그인에 실패했습니다.')
       }
       
     } catch (error) {
-      setError('이메일과 비밀번호를 확인해주세요.')
+      console.error('Login error:', error)
+      setError('로그인 중 오류가 발생했습니다.')
     } finally {
       setLoading(false)
     }
@@ -185,8 +193,8 @@ export default function SignInPage() {
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     계정이 없으신가요?{' '}
-                    <Link href="#" onClick={() => alert('데모 계정을 사용해주세요: demo@example.com / demo123')} className="text-primary hover:underline">
-                      회원가입 (데모만 가능)
+                    <Link href="/auth/signup" className="text-primary hover:underline">
+                      회원가입
                     </Link>
                   </p>
                 </div>
