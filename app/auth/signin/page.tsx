@@ -24,6 +24,7 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
+  const [success, setSuccess] = useState('')
 
   useEffect(() => {
     const urlMessage = searchParams?.get('message')
@@ -38,39 +39,33 @@ export default function SignInPage() {
     setLoading(true)
 
     try {
-      // 지연 시뮬레이션
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // 실제 API 호출로 변경
+      const response = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password
+        }),
+      })
 
-      // 클라이언트 사이드 인증 (데모 계정 + 기본 이메일 검증)
-      const isValidEmail = formData.email.includes('@') && formData.email.includes('.')
-      const isValidPassword = formData.password.length >= 3
+      const data = await response.json()
 
-      if (!isValidEmail) {
-        setError('올바른 이메일 형식을 입력해주세요.')
-        return
+      if (response.ok && data.success) {
+        // API 성공 시 처리
+        localStorage.setItem('user', JSON.stringify(data.user))
+        localStorage.setItem('token', data.token)
+        
+        setSuccess('로그인 성공! 홈페이지로 이동합니다.')
+        setTimeout(() => {
+          router.push('/')
+        }, 1000)
+      } else {
+        // API 실패 시 처리
+        setError(data.error || '로그인에 실패했습니다.')
       }
-
-      if (!isValidPassword) {
-        setError('비밀번호는 3자리 이상 입력해주세요.')
-        return
-      }
-
-      // 로그인 성공 처리
-      const userData = {
-        id: Date.now().toString(),
-        email: formData.email,
-        name: formData.email.includes('demo') ? '데모 사용자' : '마케팅 사용자',
-        role: 'user'
-      }
-
-      localStorage.setItem('user', JSON.stringify(userData))
-      localStorage.setItem('token', 'client-token-' + Date.now())
-      
-      // 성공 메시지 표시 후 리다이렉트
-      setSuccess('로그인 성공! 홈페이지로 이동합니다.')
-      setTimeout(() => {
-        router.push('/')
-      }, 2000)
       
     } catch (error) {
       console.error('Login error:', error)
@@ -121,6 +116,12 @@ export default function SignInPage() {
                 {message && (
                   <Alert className="border-green-200 bg-green-50 text-green-800">
                     <AlertDescription>{message}</AlertDescription>
+                  </Alert>
+                )}
+                
+                {success && (
+                  <Alert className="border-green-200 bg-green-50 text-green-800">
+                    <AlertDescription>{success}</AlertDescription>
                   </Alert>
                 )}
 
