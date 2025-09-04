@@ -157,15 +157,23 @@ export default function HomePage() {
 
   const fetchTrendingKeywords = async () => {
     try {
-      const response = await fetch('/api/trending-keywords')
+      const response = await fetch('/api/trending-keywords?cache=no-cache', {
+        headers: {
+          'Cache-Control': 'no-cache'
+        }
+      })
       const data = await response.json()
       
       if (data.success && data.keywords) {
         setTrendingKeywords(data.keywords)
+      } else {
+        // 백업 키워드 설정
+        setTrendingKeywords(['디지털마케팅', 'SNS광고', '브랜딩', 'SEO최적화', '콘텐츠마케팅'])
       }
     } catch (error) {
       console.error('Trending keywords fetch failed:', error)
-      setTrendingKeywords([])
+      // 백업 키워드 설정
+      setTrendingKeywords(['디지털마케팅', 'SNS광고', '브랜딩', 'SEO최적화', '콘텐츠마케팅'])
     }
   }
 
