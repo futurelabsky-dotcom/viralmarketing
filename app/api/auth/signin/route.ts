@@ -5,7 +5,30 @@ interface SignInRequest {
   password: string
 }
 
+// OPTIONS 메서드 지원 추가
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
+}
+
 export async function POST(request: NextRequest) {
+  // CORS 헤더 추가
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
+
+  // OPTIONS 요청 처리
+  if (request.method === 'OPTIONS') {
+    return new NextResponse(null, { status: 200, headers: corsHeaders })
+  }
   try {
     const { email, password }: SignInRequest = await request.json()
 
@@ -29,7 +52,7 @@ export async function POST(request: NextRequest) {
           role: 'user'
         },
         token: 'demo-token'
-      })
+      }, { headers: corsHeaders })
     }
 
     // Mock 로그인 처리
@@ -48,7 +71,7 @@ export async function POST(request: NextRequest) {
           role: 'user'
         },
         token: Math.random().toString(36).substr(2, 20)
-      })
+      }, { headers: corsHeaders })
     }
 
     // 로그인 실패

@@ -19,7 +19,7 @@ export default function HomePage() {
   const [featuredPosts, setFeaturedPosts] = useState<any[]>([])
   const [popularPosts, setPopularPosts] = useState<any[]>([])
   const [recentPosts, setRecentPosts] = useState<any[]>([])
-  const [trendingKeywords, setTrendingKeywords] = useState<string[]>([])
+  const [trendingKeywords, setTrendingKeywords] = useState<string[]>(['디지털마케팅', 'SNS광고', '브랜딩', 'SEO최적화', '콘텐츠마케팅', '퍼포먼스마케팅', '인플루언서', '바이럴마케팅', 'KPI', '마케팅자동화'])
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
   const [newsArticles, setNewsArticles] = useState<any[]>([])
 
