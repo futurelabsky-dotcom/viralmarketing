@@ -45,11 +45,13 @@ export default function SignInPage() {
 
       if (!isValidEmail) {
         setError('올바른 이메일 형식을 입력해주세요.')
+        setLoading(false)
         return
       }
 
       if (!isValidPassword) {
         setError('비밀번호는 3자리 이상 입력해주세요.')
+        setLoading(false)
         return
       }
 
@@ -65,9 +67,10 @@ export default function SignInPage() {
         localStorage.setItem('token', 'demo-token-' + Date.now())
         
         setSuccess('로그인 성공! 홈페이지로 이동합니다.')
+        setLoading(false)
         setTimeout(() => {
           router.push('/')
-        }, 1500)
+        }, 1000)
         return
       }
 
@@ -83,9 +86,10 @@ export default function SignInPage() {
       localStorage.setItem('token', 'client-token-' + Date.now())
       
       setSuccess('로그인 성공! 홈페이지로 이동합니다.')
+      setLoading(false)
       setTimeout(() => {
         router.push('/')
-      }, 1500)
+      }, 1000)
       
     } catch (error) {
       console.error('Login error:', error)

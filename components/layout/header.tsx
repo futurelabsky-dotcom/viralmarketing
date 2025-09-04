@@ -1,11 +1,37 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+
+  useEffect(() => {
+    // 로그인 상태 확인
+    const checkAuth = () => {
+      if (typeof window !== 'undefined') {
+        const userData = localStorage.getItem('user')
+        if (userData) {
+          setUser(JSON.parse(userData))
+        }
+      }
+    }
+    
+    checkAuth()
+    
+    // 로그인/로그아웃 시 상태 업데이트를 위한 이벤트 리스너
+    window.addEventListener('storage', checkAuth)
+    return () => window.removeEventListener('storage', checkAuth)
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('token')
+    setUser(null)
+    window.location.href = '/'
+  }
 
   const navigation = [
     { name: '홈', href: '/' },
@@ -37,12 +63,26 @@ export default function Header() {
             </div>
           </div>
           <div className="ml-10 space-x-4">
-            <Link
-              href="/auth/signin"
-              className="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
-            >
-              로그인
-            </Link>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-base font-medium text-gray-700">
+                  안녕하세요, {user.name}님
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="inline-block rounded-md border border-transparent bg-red-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
+                >
+                  로그아웃
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="inline-block rounded-md border border-transparent bg-indigo-500 py-2 px-4 text-base font-medium text-white hover:bg-opacity-75"
+              >
+                로그인
+              </Link>
+            )}
           </div>
           <div className="lg:hidden">
             <button
