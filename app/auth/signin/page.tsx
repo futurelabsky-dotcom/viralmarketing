@@ -185,8 +185,8 @@ export default function SignInPage() {
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     계정이 없으신가요?{' '}
-                    <Link href="/auth/signup" className="text-primary hover:underline">
-                      회원가입
+                    <Link href="#" onClick={() => alert('데모 계정을 사용해주세요: demo@example.com / demo123')} className="text-primary hover:underline">
+                      회원가입 (데모만 가능)
                     </Link>
                   </p>
                 </div>
