@@ -68,8 +68,16 @@ export default function SignInPage() {
         
         setSuccess('로그인 성공! 홈페이지로 이동합니다.')
         setLoading(false)
+        
+        // 세션 저장 후 storage 이벤트 트리거
+        window.dispatchEvent(new Event('storage'))
+        
         setTimeout(() => {
           router.push('/')
+          // 페이지 이동 후 추가 새로고침으로 세션 확실히 적용
+          setTimeout(() => {
+            window.location.reload()
+          }, 100)
         }, 1000)
         return
       }
@@ -87,8 +95,16 @@ export default function SignInPage() {
       
       setSuccess('로그인 성공! 홈페이지로 이동합니다.')
       setLoading(false)
+      
+      // 세션 저장 후 storage 이벤트 트리거
+      window.dispatchEvent(new Event('storage'))
+      
       setTimeout(() => {
         router.push('/')
+        // 페이지 이동 후 추가 새로고침으로 세션 확실히 적용
+        setTimeout(() => {
+          window.location.reload()
+        }, 100)
       }, 1000)
       
     } catch (error) {

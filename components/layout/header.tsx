@@ -9,12 +9,32 @@ export default function Header() {
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // 로그인 상태 확인
+    // 로그인 상태 확인 및 세션 복원
     const checkAuth = () => {
       if (typeof window !== 'undefined') {
         const userData = localStorage.getItem('user')
-        if (userData) {
-          setUser(JSON.parse(userData))
+        const token = localStorage.getItem('token')
+        if (userData && token) {
+          try {
+            const user = JSON.parse(userData)
+            // 토큰 유효성 간단 체크 (데모용)
+            if (token && token.length > 10) {
+              setUser(user)
+              console.log('세션 복원됨:', user.name)
+            } else {
+              // 유효하지 않은 토큰인 경우 세션 클리어
+              localStorage.removeItem('user')
+              localStorage.removeItem('token')
+              setUser(null)
+            }
+          } catch (e) {
+            // JSON 파싱 오류시 세션 클리어
+            localStorage.removeItem('user')
+            localStorage.removeItem('token')
+            setUser(null)
+          }
+        } else {
+          setUser(null)
         }
       }
     }
@@ -23,7 +43,14 @@ export default function Header() {
     
     // 로그인/로그아웃 시 상태 업데이트를 위한 이벤트 리스너
     window.addEventListener('storage', checkAuth)
-    return () => window.removeEventListener('storage', checkAuth)
+    
+    // 페이지 포커스 시 세션 재확인 (다른 탭에서 로그아웃했을 경우)
+    window.addEventListener('focus', checkAuth)
+    
+    return () => {
+      window.removeEventListener('storage', checkAuth)
+      window.removeEventListener('focus', checkAuth)
+    }
   }, [])
 
   const handleLogout = () => {
