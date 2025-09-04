@@ -67,8 +67,10 @@ export default function SignInPage() {
       localStorage.setItem('token', 'client-token-' + Date.now())
       
       // 성공 메시지 표시 후 리다이렉트
-      alert('로그인 성공!')
-      router.push('/')
+      setSuccess('로그인 성공! 홈페이지로 이동합니다.')
+      setTimeout(() => {
+        router.push('/')
+      }, 2000)
       
     } catch (error) {
       console.error('Login error:', error)
