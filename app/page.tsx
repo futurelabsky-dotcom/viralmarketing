@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-// import { useAuth } from "../../../lib/auth-context"
+// Removed auth-context import - using local state instead
 import { TrendingUp, Users, BookOpen, Calendar, ArrowRight, MessageSquare, Heart, Eye, Hash, Flame } from 'lucide-react'
 import Header from '@/components/layout/header'
 import Footer from '@/components/layout/footer'
