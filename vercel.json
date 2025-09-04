@@ -6,5 +6,16 @@
     "app/api/auth/signup/route.ts": {
       "maxDuration": 10
     }
-  }
+  },
+  "buildCommand": "next build",
+  "rewrites": [
+    {
+      "source": "/signup",
+      "destination": "/signup"
+    },
+    {
+      "source": "/auth/signup",
+      "destination": "/auth/signup"
+    }
+  ]
 }

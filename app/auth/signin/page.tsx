@@ -204,7 +204,7 @@ export default function SignInPage() {
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     계정이 없으신가요?{' '}
-                    <Link href="/signup" className="text-primary hover:underline">
+                    <Link href="/auth/signup" className="text-primary hover:underline">
                       회원가입
                     </Link>
                   </p>
