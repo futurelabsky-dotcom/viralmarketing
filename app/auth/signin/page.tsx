@@ -38,29 +38,37 @@ export default function SignInPage() {
     setLoading(true)
 
     try {
-      // 실제 로그인 API 호출
-      const response = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      })
+      // 지연 시뮬레이션
+      await new Promise(resolve => setTimeout(resolve, 1000))
 
-      const data = await response.json()
+      // 클라이언트 사이드 인증 (데모 계정 + 기본 이메일 검증)
+      const isValidEmail = formData.email.includes('@') && formData.email.includes('.')
+      const isValidPassword = formData.password.length >= 3
 
-      if (response.ok && data.success) {
-        // 로그인 성공
-        localStorage.setItem('user', JSON.stringify(data.user))
-        localStorage.setItem('token', data.token)
-        router.push('/')
-      } else {
-        // 로그인 실패
-        setError(data.error || '로그인에 실패했습니다.')
+      if (!isValidEmail) {
+        setError('올바른 이메일 형식을 입력해주세요.')
+        return
       }
+
+      if (!isValidPassword) {
+        setError('비밀번호는 3자리 이상 입력해주세요.')
+        return
+      }
+
+      // 로그인 성공 처리
+      const userData = {
+        id: Date.now().toString(),
+        email: formData.email,
+        name: formData.email.includes('demo') ? '데모 사용자' : '마케팅 사용자',
+        role: 'user'
+      }
+
+      localStorage.setItem('user', JSON.stringify(userData))
+      localStorage.setItem('token', 'client-token-' + Date.now())
+      
+      // 성공 메시지 표시 후 리다이렉트
+      alert('로그인 성공!')
+      router.push('/')
       
     } catch (error) {
       console.error('Login error:', error)
@@ -193,7 +201,7 @@ export default function SignInPage() {
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     계정이 없으신가요?{' '}
-                    <Link href="/auth/signup" className="text-primary hover:underline">
+                    <Link href="/signup" className="text-primary hover:underline">
                       회원가입
                     </Link>
                   </p>

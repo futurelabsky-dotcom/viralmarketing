@@ -46,16 +46,42 @@ export default function SignUpPage() {
     setLoading(true)
 
     try {
-      // Mock 회원가입 처리
+      // 지연 시뮬레이션
       await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // 클라이언트 사이드 회원가입 검증
+      const isValidEmail = formData.email.includes('@') && formData.email.includes('.')
+      const isValidName = formData.name.length >= 2
+
+      if (!isValidEmail) {
+        setError('올바른 이메일 형식을 입력해주세요.')
+        return
+      }
+
+      if (!isValidName) {
+        setError('이름은 2자리 이상 입력해주세요.')
+        return
+      }
+
+      // 회원가입 성공 처리
+      const userData = {
+        id: Date.now().toString(),
+        email: formData.email,
+        name: formData.name,
+        role: 'user'
+      }
+
+      // 가입 정보 저장 (실제로는 데이터베이스에 저장)
+      localStorage.setItem('registered_user', JSON.stringify(userData))
       
       setSuccess('회원가입이 완료되었습니다! 로그인 페이지로 이동합니다.')
       
       setTimeout(() => {
-        router.push('/auth/signin?message=회원가입이 완료되었습니다')
+        router.push('/auth/signin?message=회원가입이 완료되었습니다. 로그인해주세요.')
       }, 1500)
       
     } catch (error) {
+      console.error('Signup error:', error)
       setError('회원가입 중 오류가 발생했습니다.')
     } finally {
       setLoading(false)
