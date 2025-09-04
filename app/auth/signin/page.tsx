@@ -201,8 +201,11 @@ export default function SignInPage() {
                 <div className="mt-6 text-center">
                   <p className="text-sm text-muted-foreground">
                     계정이 없으신가요?{' '}
-                    <Link href="/signup" className="text-primary hover:underline">
-                      회원가입
+                    <Link href="#" onClick={(e) => {
+                      e.preventDefault();
+                      alert('회원가입 기능: 현재 데모로 운영 중입니다. 어떤 이메일과 비밀번호(3자리 이상)로도 로그인 가능합니다!');
+                    }} className="text-primary hover:underline">
+                      회원가입 (데모)
                     </Link>
                   </p>
                 </div>
